@@ -14,6 +14,41 @@ public class SearchTree<E extends Comparable<E>> {
     private int size;
 
     /**
+     * String used in generateInOrderString methods.
+     */
+    private String str;
+
+    /**
+     * Represents a Node.
+     * @param <T>   The type of Node.
+     */
+    private static class Node<T> {
+        /**
+         * The data of the Node
+         */
+        public T data;
+
+        /**
+         * The left child of the Node
+         */
+        public Node<T> left;
+
+        /**
+         * The right child of the Node
+         */
+        public Node<T> right;
+
+        /**
+         * Constructor for a Node
+         * @param data      The data of the Node
+         */
+        public Node(T data) {
+            this.data = data;
+        }
+
+    }
+
+    /**
      * Full constructor
      */
     public SearchTree() {
@@ -25,6 +60,7 @@ public class SearchTree<E extends Comparable<E>> {
      */
     public void clear() {
         root = null;
+        size = 0;
     }
 
     /**
@@ -37,7 +73,7 @@ public class SearchTree<E extends Comparable<E>> {
 
     /**
      * Method for adding a node to a search tree.
-     * @param data      The data to be added.
+     * @param data      The data to be added, cannot be null.
      */
     public void add(E data) {
         if (data == null) {
@@ -52,7 +88,7 @@ public class SearchTree<E extends Comparable<E>> {
      * Method for adding a node to a search tree.
      * @param data          The data to be added.
      * @param startNode     The starting node.
-     * @return
+     * @return              The starting node.
      */
     private Node<E> add(E data, Node<E> startNode) {
         if (startNode == null) {
@@ -67,15 +103,11 @@ public class SearchTree<E extends Comparable<E>> {
 
     /**
      * Method for checking to see if a value is present in a search tree.
-     * @param data      The value being looked for.
+     * @param data      The value being looked for.  Cannot be null.
      * @return          Whether the value is present in the search tree.
      */
     public boolean contains(E data) {
-        if (data == null) {
-            throw new IllegalArgumentException("Data/value cannot be null.");
-        } else {
-            return contains(data, root);
-        }
+        return contains(data, root);
     }
 
     /**
@@ -85,7 +117,7 @@ public class SearchTree<E extends Comparable<E>> {
      * @return              Whether the value is present in the search tree.
      */
     private boolean contains(E data, Node<E> startNode) {
-        if (root == null) {
+        if (startNode == null) {
             return false;
         } else if(data.compareTo(startNode.data) == 0) {
             return true;
@@ -96,44 +128,94 @@ public class SearchTree<E extends Comparable<E>> {
         }
     }
 
+//    /**
+//     * Method for printing the nodes in order.
+//     */
+//    public void printInOrder() {
+//        printInOrder(root);
+//    }
+//
+//    /**
+//     * Method for printing the nodes in the order.
+//     * @param root      The current node being printed.
+//     */
+//    private void printInOrder(Node<E> root) {
+//        if (root != null) {
+//            printInOrder(root.left);
+//            System.out.println(root.data);
+//            printInOrder(root.right);
+//        }
+//    }
+
     /**
      * Method for printing the nodes in order.
+     * @return The in order String.
      */
-    public void printInOrder() {
-        printInOrder(root);
+    public String generateInOrderString() {
+        str = "";
+        generateInOrderString(root);
+        return str;
     }
 
     /**
      * Method for printing the nodes in the order.
      * @param root      The current node being printed.
      */
-    private void printInOrder(Node<E> root) {
+    private void generateInOrderString(Node<E> root) {
         if (root != null) {
-            printInOrder(root.left);
-            System.out.println(root.data);
-            printInOrder(root.right);
+            generateInOrderString(root.left);
+            str = str.concat(root.data.toString() + "\n");
+            generateInOrderString(root.right);
         }
     }
 
     /**
-     * Represents a Node.
-     * @param <T>   The type of Node.
+     * Method for removing a Node
+     * @param data      The data of the Node to be deleted
      */
-    private static class Node<T> {
-        public T data;
-        public Node<T> left;
-        public Node<T> right;
-
-        public Node(T data) {
-            this.data = data;
-        }
-
-        public Node(T data, Node<T> left, Node<T> right) {
-            this.data = data;
-            this.left = left;
-            this.right = right;
-        }
-
+    public void delete(E data) {
+        root = delete(root, data);
     }
 
+    /**
+     * Method for removing a Node
+     * @param startNode     The starting Node
+     * @param data          The data of the Node to be deleted
+     * @return              A Node
+     */
+    private Node<E> delete(Node<E> startNode, E data) {
+        if (startNode == null) {
+            return startNode;
+        }
+        if (data.compareTo(startNode.data) < 0) {
+            startNode.left = delete(startNode.left, data);
+        } else if (data.compareTo(startNode.data) > 0) {
+            startNode.right = delete(startNode.right, data);
+        } else {
+            if (startNode.left == null) {
+                return startNode.right;
+            } else if (startNode.right == null) {
+                return startNode.left;
+            }
+            startNode.data = deleteHelper(startNode.right);
+            startNode.right = delete(startNode.right, startNode.data);
+            // This isn't working right
+            size--;
+        }
+        return startNode;
+    }
+
+    /**
+     * Helper method for deleting a node
+     * @param startNode     The starting Node
+     * @return              The data of the Node.
+     */
+    private E deleteHelper(Node<E> startNode) {
+        E data = startNode.data;
+        while (startNode.left != null) {
+            data = startNode.left.data;
+            startNode = startNode.left;
+        }
+        return data;
+    }
 }
