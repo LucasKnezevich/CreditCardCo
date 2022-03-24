@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * TreeMap class.
  * @param <K>       The type.
@@ -245,6 +247,7 @@ public class TreeMap<K extends Comparable<K>, V> {
      * @return              The array.
      */
     public K[] keyArray(K[] kArray) {
+        kArray = Arrays.copyOf(kArray,this.getSize());
         keyArray(kArray, root, 0);
         return kArray;
     }

@@ -7,11 +7,11 @@ class TreeMapTest {
 
     @Test
     void constructor() {
-        TreeMap<String,String> strTree = new TreeMap<>();
-        assertEquals(0,strTree.getSize());
-        assertNull(strTree.get("Key Test"));
-        strTree.put("Key Test","Value Test");
-        assertEquals("Value Test",strTree.get("Key Test"));
+        TreeMap<Integer,String> tree = new TreeMap<>();
+        assertEquals(0,tree.getSize());
+        assertNull(tree.get(2));
+        tree.put(2,"Two");
+        assertEquals("Two",tree.get(2));
     }
 
     @Test
@@ -43,10 +43,10 @@ class TreeMapTest {
     @Test
     void put() {
         TreeMap<String,String> tree = new TreeMap<>();
-        tree.put("Ten","Ten");
-        tree.put("Two","Two");
-        tree.put("Twenty","Twenty");
-        tree.put("Thirty","Thirty");
+        tree.put("Ten","10");
+        tree.put("Two","2");
+        tree.put("Twenty","20");
+        tree.put("Thirty","30");
         tree.put("Forty","40");
         tree.put("Thirty","30");
 
@@ -153,7 +153,7 @@ class TreeMapTest {
         tree.put(12,"12");
         tree.put(50,"50");
 
-        Integer[] intArr = new Integer[tree.getSize()];
+        Integer[] intArr = new Integer[0];
         assertEquals(5, tree.keyArray(intArr)[0]);
         assertEquals(15, tree.keyArray(intArr)[3]);
     }
